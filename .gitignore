@@ -1,4 +1,11 @@
-build/
-node_modules/
-package-lock.json
+urb/build/
+urb/node_modules/
+urb/package-lock.json
+urb/.DS_Store
+
+e-mail/build/
+e-mail/node_modules/
+e-mail/package-lock.json
+e-mail/.DS_Store
+
 .DS_Store

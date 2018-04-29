@@ -1,5 +1,5 @@
 {
-  "name": "Curso de NodeJs",
+  "name": "email-curso-de-nodejs",
   "version": "1.0.0",
   "description": "Pequeno projeto de Node com TypeScript e MongoDB",
   "main": "app.js",
@@ -10,18 +10,14 @@
   "author": "Matheus Franco",
   "license": "ISC",
   "dependencies": {
-    "@types/crypto-js": "^3.1.39",
     "@types/http-status": "^0.2.30",
     "@types/nodemailer": "^4.6.0",
     "body-parser": "^1.18.2",
-    "crypto-js": "^3.1.9-1",
     "express": "^4.16.3",
-    "mongoose": "^5.0.13",
     "nodemailer": "^4.6.4"
   },
   "devDependencies": {
     "@types/express": "^4.11.1",
-    "@types/mongoose": "^5.0.7",
     "http-status": "^1.0.1"
   }
 }

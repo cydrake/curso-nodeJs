@@ -1,0 +1,1 @@
+export const toLowerTrim = (texto: string) => texto.trim().toLowerCase();
