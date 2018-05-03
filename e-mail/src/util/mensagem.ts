@@ -1,9 +1,7 @@
-export const mensagemObrigatorio = (label: string) => `${label} é obrigatório.`;
-
 export const mensagemSucesso = () => 'E-mail enviado com sucesso!';
 
 export const mensagemErro = (tipo: string, erro: any) => {
-  const erroMenssagem: string = `Erro ao enviar o e-mail ${erro != undefined ? "- " + erro : "."}`;
+  const erroMenssagem: string = `Erro ao enviar o e-mail ${ erro != undefined ? "- " + erro : "." }`;
   console.error(erroMenssagem);
   return new Error(erroMenssagem);
 }

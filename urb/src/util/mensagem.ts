@@ -4,6 +4,7 @@ import { Genero } from "./enum";
 export const mensagemObrigatorio = (label: string) => `${label} é obrigatório.`;
 
 export class Mensagem {
+  
   constructor(private label: string, private genero: Genero) {
     this.label = label;
     this.genero = genero;

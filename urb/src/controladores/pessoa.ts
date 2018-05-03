@@ -33,7 +33,7 @@ export class PessoaControlador {
 
   public async buscarPorId(req: Request, res: Response) {
     try {
-      const resultado: any = await pessoa.buscarPorId(req.body.id);
+      const resultado: any = await pessoa.buscarPorId(req.params.id);
       if (resultado) {
         res.send({ pessoas: resultado });
         console.log(mensagem.mensagemSucessoBusca());
@@ -55,7 +55,7 @@ export class PessoaControlador {
     if (Validador.validarEmail(usuarioBody.eMail)) {
       try {
         const resultadoUsuario: any = await usuario.cadastrar(usuarioBody);
-        pessoaBody.idUsuario = resultadoUsuario._id;
+        pessoaBody.id_usuario = resultadoUsuario._id;
         const resultadoPessoa: any = await pessoa.cadastrar(pessoaBody);
         res.status(201).send({ pessoa: resultadoPessoa });
         console.log(mensagem.mensagemSucessoCadastro());
@@ -69,9 +69,8 @@ export class PessoaControlador {
   }
 
   public async alterar(req: Request, res: Response) {
-    const body: any = req.body;
     try {
-      const resultado: any = await pessoa.alterar(body, body.id);
+      const resultado: any = await pessoa.alterar(req.body, req.params.id);
       res.send({ pessoa: resultado });
       console.log(mensagem.mensagemSucessoAlteracao());
     } catch (erro) {
@@ -82,7 +81,7 @@ export class PessoaControlador {
 
   public async excluir(req: Request, res: Response) {
     try {
-      const resultado: any = await pessoa.excluir(req.body.id);
+      const resultado: any = await pessoa.excluir(req.params.id);
       const texto: string = mensagem.mensagemSucessoExclusao();
       res.send({ resposta: texto });
       console.log(texto);
