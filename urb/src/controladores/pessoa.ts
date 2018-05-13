@@ -81,7 +81,10 @@ export class PessoaControlador {
 
   public async excluir(req: Request, res: Response) {
     try {
-      const resultado: any = await pessoa.excluir(req.params.id);
+      const idPessoa: string = req.params.id;
+      const pessoaReferencia: any = await pessoa.buscarPorId(idPessoa);
+      const resultadoPessoa: any = await pessoa.excluir(idPessoa);
+      const resultadoUsuario: any = await usuario.excluir(pessoaReferencia.id_usuario);
       const texto: string = mensagem.mensagemSucessoExclusao();
       res.send({ resposta: texto });
       console.log(texto);
@@ -91,6 +94,20 @@ export class PessoaControlador {
     }
   }
 
-  public async logar(req: Request, res: Response) {}
+  public async logar(req: Request, res: Response) {
+    let pessoaBody: any = req.body;
+    const usuarioBody: any = {
+      eMail: StringUtil.toLowerTrim(pessoaBody.eMail),
+      senha: StringUtil.criptografar(pessoaBody.senha)
+    };
+    try {
+        const resultadoUsuario: any = await usuario.buscarPorEmailESenha(usuarioBody.email, usuarioBody.senha);
+        console.log(mensagem.mensagemSucessoLogin());
+        res.send(true);
+      } catch (erro) {
+        res.sendStatus(500);
+        throw mensagem.mensagemErroCadastro(erro);
+      }
+  }
 
 }

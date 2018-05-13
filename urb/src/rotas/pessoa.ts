@@ -1,7 +1,7 @@
-import * as Express from "express";
+import { Application } from "express";
 import { PessoaControlador } from '../controladores/pessoa';
 
-export default function (server: Express.Application) {
+export default function (server: Application) {
   const pessoaControlador = new PessoaControlador();
   server.get('/pessoas', pessoaControlador.buscarTodos);
   server.get('/pessoa/:id', pessoaControlador.buscarPorId);

@@ -2,20 +2,25 @@ import { Schema, Document, model } from 'mongoose';
 import * as Msg from '../util/mensagem';
 
 export interface ILocalizacaoMotoristaModel extends Document {
-  id_motorista: Schema.Types.ObjectId;
+  idMotorista: Schema.Types.ObjectId
+  idPessoa: Schema.Types.ObjectId;
   localizacao: Localizacao;
   data: Date;
 }
 
 export const LocalizacaoMotoristaSchema: Schema = new Schema({
-  id_motorista: { type: Schema.Types.ObjectId, required: [true, Msg.mensagemObrigatorio('Motoristsa')] },
-  localizacao: { type: Object, required: [true, Msg.mensagemObrigatorio('Localizacao')] },
-  data: { type: Date, required: [true, Msg.mensagemObrigatorio('Data')] }
+  idMotorista: { type: Schema.Types.ObjectId, required: [true, Msg.mensagemObrigatorio('Motoristsa')] },
+  idPessoa: { type: Schema.Types.ObjectId, required: [true, Msg.mensagemObrigatorio('Pessoa')] },
+  data: { type: Date, required: [true, Msg.mensagemObrigatorio('Data')] },
+  localizacao:{ type: { String, default: 'Point' }, coordinates: { type: [Number], index: '2dsphere' }},
 });
 
 export const LocalizacaoMotoristaModel = model<ILocalizacaoMotoristaModel>('LocalizacaoMotorista', LocalizacaoMotoristaSchema);
 
 export interface Localizacao {
-    latitude: number,
-    longitude: number
+  type: string
+  coordinates: {
+      type: [Number],
+      index: '2dsphere'
+  }
 }

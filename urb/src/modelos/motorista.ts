@@ -1,6 +1,7 @@
 import { StatusVeiculo } from '../util/enum';
 import { Schema, Document, model } from 'mongoose';
 import * as Msg from '../util/mensagem';
+import { Localizacao } from './localizacao-motorista';
 
 export interface IMotoristaModel extends Document {
   nome: string;
@@ -10,6 +11,8 @@ export interface IMotoristaModel extends Document {
   endereco: Endereco;
   telefone: number;
   veiculo: Veiculo;
+  localizacao: Localizacao;
+  status: boolean;
 }
 
 export const MotoristaSchema: Schema = new Schema({
@@ -19,7 +22,10 @@ export const MotoristaSchema: Schema = new Schema({
   id_usuario: { type: Schema.Types.ObjectId, required: [true, Msg.mensagemObrigatorio('Usuário')] },
   endereco: { type: Object, required: [true, Msg.mensagemObrigatorio('Endereço')] },
   telefone: { type: Number, required: [true, Msg.mensagemObrigatorio('Telefone')] },
-  veiculo: { type: Object, required: [true, Msg.mensagemObrigatorio('Veículo')] }
+  veiculo: { type: Object, required: [true, Msg.mensagemObrigatorio('Veículo')] },
+  status: { type: Boolean, required: [true, Msg.mensagemObrigatorio('Status')] },
+  localizacao: { type: Object, required: [true, Msg.mensagemObrigatorio('Localização')] },
+  geometry: { type: { String, default:'Point' }, coordinates:{ type:[Number], index:'2dsphere' } }
 });
 
 export const MotoristaModel = model<IMotoristaModel>('Motorista', MotoristaSchema);

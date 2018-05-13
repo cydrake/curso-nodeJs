@@ -33,6 +33,14 @@ export abstract class DatabaseService<T extends Document> {
     }
   }
 
+  public async buscar(query: any): Promise<T[]> {
+    try {
+      return await this.Model.find(query).exec();
+    } catch (erro) {
+      throw this.menssagem.mensagemErroBusca(erro);
+    }
+  }
+
   public async cadastrar(body: any): Promise<T> {
     try {
       return await this.Model.create(body);
@@ -54,6 +62,14 @@ export abstract class DatabaseService<T extends Document> {
       return await this.Model.findByIdAndRemove(id);
     } catch (erro) {
       throw this.menssagem.mensagemErroExclusao(erro);
+    }
+  }
+
+  public async buscarPorEmailESenha(eMail: string, senha: string): Promise<T | null> {
+    try {
+      return await this.Model.findOne({ 'eMail': eMail, 'senha': senha }).exec();
+    } catch (erro) {
+      throw this.menssagem.mensagemErroBusca(erro);
     }
   }
 

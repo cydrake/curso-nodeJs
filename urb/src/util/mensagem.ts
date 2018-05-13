@@ -52,6 +52,10 @@ export class Mensagem {
     return this.mensagemSucesso("excluid");
   }
 
+  public mensagemSucessoLogin(): string {
+    return this.mensagemSucesso("logad");
+  }
+
   public mensagemErroAlteracao(erro?: any): Error {
     return this.mensagemErro("alterar", erro);
   }

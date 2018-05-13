@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { LocalizacaoMotorista } from "../repositorios/localizacao-motorista";
 import { Usuario } from "../repositorios/usuario";
 import { Pessoa } from "../repositorios/pessoa";
+import { Motorista } from "../repositorios/motorista";
 import { IUsuarioModel } from "./../modelos/usuario";
 import { Mensagem } from "../util/mensagem";
 import * as StringUtil from "../util/string";
@@ -10,6 +11,7 @@ import * as Validador from "../util/validador";
 const localizacaoMotorista: LocalizacaoMotorista = new LocalizacaoMotorista();
 const usuario: Usuario = new Usuario();
 const pessoa: Pessoa = new Pessoa();
+const motorista: Motorista = new Motorista();
 const mensagem: Mensagem = new Mensagem(localizacaoMotorista.getLabel, localizacaoMotorista.getGenero);
 
 export class LocalizacaoMotoristaControlador {
@@ -47,24 +49,13 @@ export class LocalizacaoMotoristaControlador {
   }
 
   public async cadastrar(req: Request, res: Response) {
-    let localizacaoMotoristaBody: any = req.body;
-    const usuarioBody: any = {
-      eMail: StringUtil.toLowerTrim(localizacaoMotoristaBody.eMail),
-      senha: StringUtil.criptografar(localizacaoMotoristaBody.senha)
-    };
-    if (Validador.validarEmail(usuarioBody.eMail)) {
-      try {
-        const resultadoUsuario: any = await usuario.cadastrar(usuarioBody);
-        localizacaoMotoristaBody.idUsuario = resultadoUsuario._id;
-        const resultadolocalizacaoMotorista: any = await localizacaoMotorista.cadastrar(localizacaoMotoristaBody);
-        res.status(201).send({ localizacaoMotorista: resultadolocalizacaoMotorista });
-        console.log(mensagem.mensagemSucessoCadastro());
-      } catch (erro) {
-        res.sendStatus(500);
-        throw mensagem.mensagemErroCadastro(erro);
-      }
-    } else {
-      res.status(401).send(mensagem.mensagemInvalido("E-mail"));
+    try {
+      const resultadolocalizacaoMotorista: any = await localizacaoMotorista.cadastrar(req.body);
+      res.send({ localizacaoMotorista: resultadolocalizacaoMotorista });
+      console.log(mensagem.mensagemSucessoCadastro());
+    } catch (erro) {
+      res.sendStatus(500);
+      throw mensagem.mensagemErroCadastro(erro);
     }
   }
 
@@ -92,6 +83,24 @@ export class LocalizacaoMotoristaControlador {
     }
   }
 
-  public async logar(req: Request, res: Response) {}
+  public async buscar(req: Request, res: Response): Promise<boolean> {
+    const body: any = req.body;
+    const resultadoPessoa: any = await pessoa.buscarPorId(body.idPessoa);
+    const resultadoMotorista: any = await motorista.buscarPorId(body.idMotorista);
+    const resultado: any = await localizacaoMotorista.buscar({ geometry: { $nearSphere: { 
+    $geometry: { type: "Point", coordinates: resultadoPessoa.localizacao }
+    }}});
+    resultado.limit(1).exec((err: any, result: any) => {
+      if(result){
+        console.log('Closest to %s is %s', req.body.cordenadas, result);
+        res.send(result);
+      }
+      else{
+        console.log('Cant find!');
+        res.sendStatus(401);
+      }
+    });
+    return true;
+  }
 
 }

@@ -31,7 +31,7 @@ export class MotoristaControlador {
 
   public async buscarPorId(req: Request, res: Response) {
     try {
-      const resultado: any = await motorista.buscarPorId(req.body.id);
+      const resultado: any = await motorista.buscarPorId(req.params.id);
       if (resultado) {
         res.send({ motoristas: resultado });
         console.log(mensagem.mensagemSucessoBusca());
@@ -53,7 +53,7 @@ export class MotoristaControlador {
     if (Validador.validarEmail(usuarioBody.eMail)) {
       try {
         const resultadoUsuario: any = await usuario.cadastrar(usuarioBody);
-        motoristaBody.idUsuario = resultadoUsuario._id;
+        motoristaBody.id_usuario = resultadoUsuario._id;
         const resultadoMotorista: any = await motorista.cadastrar(motoristaBody);
         res.status(201).send({ motorista: resultadoMotorista });
         console.log(mensagem.mensagemSucessoCadastro());
@@ -67,9 +67,8 @@ export class MotoristaControlador {
   }
 
   public async alterar(req: Request, res: Response) {
-    const body: any = req.body;
     try {
-      const resultado: any = await motorista.alterar(body, body.id);
+      const resultado: any = await motorista.alterar(req.body, req.params.id);
       res.send({ motorista: resultado });
       console.log(mensagem.mensagemSucessoAlteracao());
     } catch (erro) {
@@ -80,7 +79,10 @@ export class MotoristaControlador {
 
   public async excluir(req: Request, res: Response) {
     try {
-      const resultado: any = await motorista.excluir(req.body.id);
+      const idMotorista: string = req.params.id;
+      const motoristaReferencia: any = await motorista.buscarPorId(idMotorista);
+      const resultadoMotorista: any = await motorista.excluir(idMotorista);
+      const resultadoUsuario: any = await usuario.excluir(motoristaReferencia.id_usuario);
       const texto: string = mensagem.mensagemSucessoExclusao();
       res.send({ resposta: texto });
       console.log(texto);
